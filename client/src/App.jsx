@@ -1,16 +1,21 @@
-import {
-  useEffect
-} from "react";
-import API from "./services/axios";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import MainLayout from "./components/layout/MainLayout";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import NotFound from "./pages/NotFound";
 
-function App() {
-  useEffect( () => {
-    API.get( "/api" )
-      .then( ( res ) => console.log( res.data ) )
-      .catch( ( err ) => console.error( err ) );
-  }, [] );
-
-  return <h1 className="text-2xl"> Connected </h1>
+export default function App() {
+  return (
+    <BrowserRouter>
+      <MainLayout>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </MainLayout>
+    </BrowserRouter>
+  );
 }
-
-export default App;
