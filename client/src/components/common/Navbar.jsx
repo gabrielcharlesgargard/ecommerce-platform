@@ -8,6 +8,23 @@ const linkClass = ( { isActive } ) =>
 export default function Navbar() {
     return (
         <header className="border-b bg-white/90 backdrop-blur">
-            <div className="mix-auto flex max-w-7xl items-center justify-between px-4 py-4">"></div>
+            <div className="mix-auto flex max-w-7xl items-center justify-between px-4 py-4">
+                <NavLink to="/" className="text-xl font-bold text-blue-900">
+                    ShopNest
+                </NavLink>
+
+                <nav className="flex items-center gap-6 text-sm">
+                    <NavLink to="/" className={linkClass}>
+                        Home
+                    </NavLink>
+                    <NavLink to="/login" className={linkClass}>
+                        Login
+                    </NavLink>
+                    <NavLink to="/register" className={linkClass}>
+                        Register
+                    </NavLink>
+                </nav>
+            </div>
         </header>
-    )
+    );
+}
