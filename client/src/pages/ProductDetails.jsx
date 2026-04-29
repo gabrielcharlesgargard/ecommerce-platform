@@ -1,8 +1,11 @@
 import { Link, useParams } from "react-router-dom";
+import {useDispatch} from "react-redux";
 import products from "../data/products";
+import { addToCart } from "../features/cart/cartSlice";
 
 export default function ProductDetails() {
   const { id } = useParams();
+  const dispatch = useDispatch();
   const product = products.find((item) => item.id === Number(id));
 
   if (!product) {
@@ -23,6 +26,11 @@ export default function ProductDetails() {
   }
 
   const inStock = product.stock > 0;
+
+  const handleAddToCart = () => {
+    dispatch( addToCart( product ) );
+  };
+
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-12">
@@ -66,6 +74,7 @@ export default function ProductDetails() {
 
           <div className="mt-8 flex flex-wrap gap-3">
             <button
+              onClick={handleAddToCart}
               disabled={!inStock}
               className={`rounded-2xl px-5 py-3 text-sm font-semibold text-white transition ${
                 inStock
