@@ -1,7 +1,58 @@
+import { useMemo, useState } from "react";
 import ProductGrid from "../components/product/ProductGrid";
+import ProductFilters from "../components/product/ProductFilters";
 import products from "../data/products";
 
 export default function Home() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [sortBy, setSortBy] = useState("featured");
+
+  const categories = useMemo(() => {
+    return ["All", ...new Set(products.map((product) => product.category))];
+  }, []);
+
+  const filteredProducts = useMemo(() => {
+    let result = [...products];
+
+    if (searchTerm.trim()) {
+      const query = searchTerm.toLowerCase();
+      result = result.filter(
+        (product) =>
+          product.name.toLowerCase().includes(query) ||
+          product.description.toLowerCase().includes(query),
+      );
+    }
+
+    if (selectedCategory !== "All") {
+      result = result.filter(
+        (product) => product.category === selectedCategory,
+      );
+    }
+
+    switch (sortBy) {
+      case "price-low":
+        result.sort((a, b) => a.price - b.price);
+        break;
+      case "price-high":
+        result.sort((a, b) => b.price - a.price);
+        break;
+      case "rating-high":
+        result.sort((a, b) => b.rating - a.rating);
+        break;
+      default:
+        break;
+    }
+
+    return result;
+  }, [searchTerm, selectedCategory, sortBy]);
+
+  const clearFilters = () => {
+    setSearchTerm("");
+    setSelectedCategory("All");
+    setSortBy("featured");
+  };
+
   return (
     <>
       <section className="mx-auto max-w-7xl px-4 py-16">
@@ -32,7 +83,18 @@ export default function Home() {
       </section>
 
       <div id="products">
-        <ProductGrid products={products} />
+        <ProductFilters
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          selectedCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
+          sortBy={sortBy}
+          onSortChange={setSortBy}
+          categories={categories}
+          onClearFilters={clearFilters}
+        />
+
+        <ProductGrid products={filteredProducts} />
       </div>
     </>
   );
